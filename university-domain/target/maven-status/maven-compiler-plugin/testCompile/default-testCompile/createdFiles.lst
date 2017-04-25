@@ -1,0 +1,6 @@
+com\alexboriskin\university\domain\FacultyTest.class
+com\alexboriskin\university\domain\ProfessorTest.class
+com\alexboriskin\university\domain\AddressTest.class
+com\alexboriskin\university\domain\GroupTest.class
+com\alexboriskin\university\domain\AllTests.class
+com\alexboriskin\university\domain\StudentTest.class

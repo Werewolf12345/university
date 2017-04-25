@@ -1,0 +1,17 @@
+com\alexboriskin\university\dao\AddressDaoSqlImpl.class
+com\alexboriskin\university\dao\ConnectionFactory.class
+com\alexboriskin\university\dao\StaffDao.class
+com\alexboriskin\university\dao\ProfessorDao.class
+com\alexboriskin\university\dao\UniversityDao.class
+com\alexboriskin\university\dao\LectureDaoSqlImpl.class
+com\alexboriskin\university\dao\UniversityDaoSqlImpl.class
+com\alexboriskin\university\dao\ClosingUtil.class
+com\alexboriskin\university\dao\GroupDaoSqlImpl.class
+com\alexboriskin\university\dao\LectureDao.class
+com\alexboriskin\university\dao\StudentDao.class
+com\alexboriskin\university\dao\AddressDao.class
+com\alexboriskin\university\dao\StudentDaoSqlImpl.class
+com\alexboriskin\university\dao\University.class
+com\alexboriskin\university\dao\ProfessorDaoSqlImpl.class
+com\alexboriskin\university\dao\StaffDaoSqlImpl.class
+com\alexboriskin\university\dao\GroupDao.class

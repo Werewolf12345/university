@@ -1,0 +1,11 @@
+com\alexboriskin\university\domain\Address.class
+com\alexboriskin\university\domain\Group.class
+com\alexboriskin\university\domain\DAOException.class
+com\alexboriskin\university\domain\Student.class
+com\alexboriskin\university\domain\Staff.class
+com\alexboriskin\university\domain\Board.class
+com\alexboriskin\university\domain\Faculty.class
+com\alexboriskin\university\domain\Address$US.class
+com\alexboriskin\university\domain\Auditorium.class
+com\alexboriskin\university\domain\Professor.class
+com\alexboriskin\university\domain\Lecture.class
