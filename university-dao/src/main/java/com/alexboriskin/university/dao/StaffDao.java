@@ -9,4 +9,6 @@ public interface StaffDao {
             Staff staffMemberNewData) throws DAOException;
 
     public void delete(Staff staffMember) throws DAOException;
+    
+    public void delete(String firstName, String lastName, int zipCode, boolean studentOrProfessor) throws DAOException;
 }

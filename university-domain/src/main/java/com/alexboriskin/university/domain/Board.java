@@ -4,6 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Board<T> {
+    public Set<T> getMembers() {
+        return members;
+    }
+
     protected Set<T> members;
 
     public Board() {

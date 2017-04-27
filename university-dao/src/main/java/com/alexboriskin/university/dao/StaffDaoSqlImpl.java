@@ -125,4 +125,33 @@ public class StaffDaoSqlImpl implements StaffDao {
         }
     }
 
+    @Override
+    public void delete(String firstName, String lastName, int zipCode, boolean studentOrProfessor)
+            throws DAOException {
+        Connection connection = null;
+        PreparedStatement deleteMember = null;
+        String sqlExpression = null;
+        String DBTable = studentOrProfessor ? "students" : "professors";
+        
+        sqlExpression = "DELETE FROM " + DBTable + " WHERE UPPER (first_name) = UPPER (?)" 
+                            + " AND UPPER (last_name) = UPPER (?) AND address_id IN " 
+                            + "(SELECT address_id FROM addresses WHERE zip = ?);";
+        
+        try {
+            connection = ConnectionFactory.getConnection();
+            deleteMember = connection.prepareStatement(sqlExpression);
+            deleteMember.setString(1, firstName);
+            deleteMember.setString(2, lastName);
+            deleteMember.setInt(3, zipCode);
+            deleteMember.execute();
+        } catch (SQLException ex) {
+            log.error("Cannot delete member: ", ex);
+            throw new DAOException("Cannot delete member", ex);
+        } finally {
+            ClosingUtil.close(deleteMember);
+            ClosingUtil.close(connection);
+        }
+        
+    }
+
 }
