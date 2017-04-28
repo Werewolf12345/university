@@ -22,6 +22,7 @@ public class ProfessorsListServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private static final Logger log = LogManager.getLogger();
+    private static final boolean PROFESSOR = false;
 
     @Override
     protected void doGet(HttpServletRequest request,

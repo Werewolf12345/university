@@ -20,9 +20,7 @@ public class ControllerServlet extends HttpServlet {
     private static final String LIST_PROFESSORS = "/listprofessors.html";
     private static final String LIST_GROUPS = "/grouplist.html";
     private static final String LIST_STUDENTS = "/studentslist.html";
-    private static final boolean STUDENT = true;
-    private static final boolean PROFESSOR = false;
-
+   
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         String forwardToURL = "";
