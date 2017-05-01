@@ -1,18 +1,55 @@
 package com.alexboriskin.university.dao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.sql.DataSource;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.alexboriskin.university.domain.*;
+import com.alexboriskin.university.domain.Auditorium;
+import com.alexboriskin.university.domain.DAOException;
+import com.alexboriskin.university.domain.Lecture;
+import com.alexboriskin.university.domain.Professor;
+import com.alexboriskin.university.domain.Staff;
+import com.alexboriskin.university.domain.Student;
 
 public class LectureDaoSqlImpl implements LectureDao {
     private static final int NOT_EXISTING = -1;
     private static final Logger log = LogManager.getLogger();
+    private DataSource dataSource;
+    private ProfessorDao professorDao;
+    private StaffDao staffDao;
+    private StudentDao studentDao;
+    private GroupDao groupDao;
+        
+    public void setGroupDao(GroupDao groupDao) {
+        this.groupDao = groupDao;
+    }
+        
+    public void setStudentDao(StudentDao studentDao) {
+        this.studentDao = studentDao;
+    }
+
+    public void setStaffDao(StaffDao staffDao) {
+        this.staffDao = staffDao;
+    }
+
+    public void setProfessorDao(ProfessorDao professorDao) {
+        this.professorDao = professorDao;
+    }
+    
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
 
     @Override
     public void save(Lecture lecture) throws DAOException {
@@ -23,11 +60,9 @@ public class LectureDaoSqlImpl implements LectureDao {
                 + " VALUES (?, ?, ?, ?, ?);";
 
         try {
-            GroupDao groupDao = new GroupDaoSqlImpl();
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             connection.setAutoCommit(false);
-            StaffDao staffDao = new StaffDaoSqlImpl();
-
+            
             selectStatement = connection.prepareStatement(sqlExpression);
             selectStatement.setTimestamp(1, new Timestamp(lecture
                     .getDateAndTime().getTimeInMillis()));
@@ -62,11 +97,9 @@ public class LectureDaoSqlImpl implements LectureDao {
         int auditoriumNo = NOT_EXISTING;
         int groupID = NOT_EXISTING;
         Calendar dateAndTime = Calendar.getInstance();
-        GroupDao groupDao = new GroupDaoSqlImpl();
-        ProfessorDao professorDao = new ProfessorDaoSqlImpl();
-
+        
         try {
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(sqlExpression);
             preparedStatement.setInt(1, lectureID);
             resultSet = preparedStatement.executeQuery();
@@ -100,7 +133,7 @@ public class LectureDaoSqlImpl implements LectureDao {
         String sqlExpression = "DELETE FROM lectures WHERE lecture_id = ?;";
 
         try {
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(sqlExpression);
             preparedStatement.setInt(1, lectureID);
             preparedStatement.execute();
@@ -124,8 +157,7 @@ public class LectureDaoSqlImpl implements LectureDao {
         String sqlExpression = "SELECT lecture_id FROM lectures WHERE lector_id = ? AND date_and_time = ?;";
 
         try {
-            StaffDao staffDao = new StaffDaoSqlImpl();
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             selectStatement = connection.prepareStatement(sqlExpression);
             selectStatement.setInt(1, staffDao.getID(lecture.getLector()));
             selectStatement.setTimestamp(2, new Timestamp(lecture
@@ -151,9 +183,8 @@ public class LectureDaoSqlImpl implements LectureDao {
     public void update(int lectureID, Lecture lecture) throws DAOException {
 
         try {
-            LectureDao lectureDao = new LectureDaoSqlImpl();
-            lectureDao.delete(lectureID);
-            lectureDao.save(lecture);
+            delete(lectureID);
+            save(lecture);
         } catch (DAOException ex) {
             log.error("Cannot update lecture: " + ex);
             throw new DAOException("Cannot update lecture", ex);
@@ -172,20 +203,18 @@ public class LectureDaoSqlImpl implements LectureDao {
         int iD = NOT_EXISTING;
 
         if (individual instanceof Professor) {
-            StaffDao staffDao = new StaffDaoSqlImpl();
             iD = staffDao.getID(individual);
             sqlExpression = "SELECT lecture_id FROM lectures WHERE lector_id = ?"
                     + " AND (date_and_time BETWEEN ? AND ?);";
 
         } else if (individual instanceof Student) {
-            StudentDao studentDao = new StudentDaoSqlImpl();
             iD = studentDao.getGroupID((Student) individual);
             sqlExpression = "SELECT lecture_id FROM lectures WHERE group_id = ?"
                     + " AND (date_and_time BETWEEN ? AND ?);";
         }
 
         try {
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(sqlExpression);
             preparedStatement.setInt(1, iD);
             preparedStatement.setTimestamp(2,

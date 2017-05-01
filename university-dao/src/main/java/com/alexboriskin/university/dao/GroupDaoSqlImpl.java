@@ -1,16 +1,44 @@
 package com.alexboriskin.university.dao;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Set;
+
+import javax.sql.DataSource;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.alexboriskin.university.domain.*;
+import com.alexboriskin.university.domain.DAOException;
+import com.alexboriskin.university.domain.Group;
+import com.alexboriskin.university.domain.Professor;
+import com.alexboriskin.university.domain.Student;
 
 public class GroupDaoSqlImpl implements GroupDao {
     private static final int NOT_EXISTING = -1;
     private static final Logger log = LogManager.getLogger();
+    private DataSource dataSource;
+    private ProfessorDao professorDao;
+    private StaffDao staffDao;
+    private StudentDao studentDao;
+        
+    public void setStudentDao(StudentDao studentDao) {
+        this.studentDao = studentDao;
+    }
+
+    public void setStaffDao(StaffDao staffDao) {
+        this.staffDao = staffDao;
+    }
+
+    public void setProfessorDao(ProfessorDao professorDao) {
+        this.professorDao = professorDao;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     /**
      * @return group ID from DB or -1 if not found
@@ -25,7 +53,7 @@ public class GroupDaoSqlImpl implements GroupDao {
         String sqlExpression = "SELECT group_id FROM groups WHERE UPPER(name) = UPPER(?);";
 
         try {
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             selectStatement = connection.prepareStatement(sqlExpression);
             selectStatement.setString(1, group.getName());
             resultSet = selectStatement.executeQuery();
@@ -47,11 +75,8 @@ public class GroupDaoSqlImpl implements GroupDao {
 
     @Override
     public  void save(Group group) throws DAOException {
-        GroupDao groupDao = new GroupDaoSqlImpl();
-        ProfessorDao professorDao = new ProfessorDaoSqlImpl();
-        int groupID = groupDao.getID(group);
+        int groupID = getID(group);
         Professor counselor = group.getCounselor();
-        StaffDao staffDao = new StaffDaoSqlImpl();
         int counselorID = staffDao.getID(counselor);
         Set<Student> studentsInGroup = group.getStudents();
 
@@ -67,7 +92,7 @@ public class GroupDaoSqlImpl implements GroupDao {
             
 
             try {
-                connection = ConnectionFactory.getConnection();
+                connection = dataSource.getConnection();
                 connection.setAutoCommit(false);
 
                 preparedStatement = connection.prepareStatement(sqlExpression);
@@ -88,7 +113,6 @@ public class GroupDaoSqlImpl implements GroupDao {
         }
 
         for (Student current : studentsInGroup) {
-            StudentDao studentDao = new StudentDaoSqlImpl();
             if (staffDao.getID(current) == NOT_EXISTING) {
                 studentDao.save(current, group);
             } else {
@@ -114,10 +138,9 @@ public class GroupDaoSqlImpl implements GroupDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         String sqlExpression = "SELECT name, counselor_id FROM groups WHERE group_id = ?;";
-        ProfessorDao professorDao = new ProfessorDaoSqlImpl();
-
+        
         try {
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(sqlExpression);
             preparedStatement.setInt(1, groupID);
             resultSet = preparedStatement.executeQuery();
@@ -133,7 +156,6 @@ public class GroupDaoSqlImpl implements GroupDao {
             result.setCounselor(professorDao.get(counselorID));
 
             if (!groupName.equals("")) {
-                StudentDao studentDao = new StudentDaoSqlImpl();
                 result.setName(groupName);
                 sqlExpression = "SELECT student_id FROM students WHERE group_id = ?;";
                 preparedStatement = connection.prepareStatement(sqlExpression);

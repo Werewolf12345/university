@@ -21,9 +21,9 @@ public class UniversityTest {
 
     @Test
     public void testGetSchedule() throws DAOException {
-        University testUniversity = new University();
+        UniversityDao testUniversity = new UniversityDaoSqlImpl();
    
-        Group testGroup = testUniversity.getGroup("m93");
+        Group testGroup = testUniversity.("m93");
         Faculty faculty = testUniversity.getAllProfessors();
         Professor professor1 = faculty.find("Adam", "Smith", 60061);
         Student student1 = testGroup.find("Alex", "Bor", 60061);

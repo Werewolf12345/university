@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 
-import com.alexboriskin.university.dao.University;
+import com.alexboriskin.university.dao.ApplicationContextProvider;
+import com.alexboriskin.university.dao.UniversityDao;
 import com.alexboriskin.university.domain.DAOException;
 import com.alexboriskin.university.domain.Professor;
 
@@ -22,15 +24,16 @@ public class ProfessorsListServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private static final Logger log = LogManager.getLogger();
-    private static final boolean PROFESSOR = false;
-
+    
     @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
         try {
-            University university = new University();
-            Set<Professor> allProfessors = university.getAllProfessors()
+            ApplicationContext context = ApplicationContextProvider.getInstance();
+            UniversityDao universityDao  = (UniversityDao) context.getBean("universityDao");
+            
+            Set<Professor> allProfessors = universityDao.getProfessorsSet()
                     .getMembers();
             request.setAttribute("professors", allProfessors);
         } catch (DAOException e) {

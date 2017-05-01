@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.sql.DataSource;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,6 +18,22 @@ import com.alexboriskin.university.domain.Group;
 
 public class UniversityDaoSqlImpl implements UniversityDao{
     private static final Logger log = LogManager.getLogger();
+    private DataSource dataSource;
+    private GroupDao groupDao;
+    private ProfessorDao professorDao;
+    
+    
+    public void setProfessorDao(ProfessorDao professorDao) {
+        this.professorDao = professorDao;
+    }
+
+    public void setGroupDao(GroupDao groupDao) {
+        this.groupDao = groupDao;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public Set<Group> getGroupsSet() throws DAOException {
@@ -27,8 +45,7 @@ public class UniversityDaoSqlImpl implements UniversityDao{
         String sqlExpression = "SELECT group_id FROM groups;";
 
         try {
-            GroupDao groupDao = new GroupDaoSqlImpl();
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(sqlExpression);
             resultSet = preparedStatement.executeQuery();
 
@@ -56,10 +73,9 @@ public class UniversityDaoSqlImpl implements UniversityDao{
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         String sqlExpression = "SELECT professor_id FROM professors;";
-        ProfessorDao professorDao = new ProfessorDaoSqlImpl();
-
+        
         try {
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(sqlExpression);
             resultSet = preparedStatement.executeQuery();
 

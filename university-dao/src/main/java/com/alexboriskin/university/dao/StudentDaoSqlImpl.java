@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,14 +18,33 @@ import com.alexboriskin.university.domain.Student;
 public class StudentDaoSqlImpl extends StaffDaoSqlImpl implements StudentDao{
     private static final int NOT_EXISTING = -1;
     private static final Logger log = LogManager.getLogger();
+    private DataSource dataSource;
+    private GroupDao groupDao;
+    private AddressDao addressDao;
+    private StaffDao staffDao;
+    
+    public void setStaffDao(StaffDao staffDao) {
+        this.staffDao = staffDao;
+    }
+
+    public void setAddressDao(AddressDao addressDao) {
+        this.addressDao = addressDao;
+    }
+
+    public void setGroupDao(GroupDao groupDao) {
+        this.groupDao = groupDao;
+    }
+    
+    @Override
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
       
     @Override
     public void save(Student student, Group group) throws DAOException {
-        GroupDao groupDao = new GroupDaoSqlImpl();
         Connection connection = null;
         PreparedStatement insertStudent = null;
         int groupID = groupDao.getID(group);
-        AddressDao addressDao = new AddressDaoSqlImpl();
         int addressID = addressDao.getID(student);
         String sqlExpression = null;
         
@@ -35,7 +56,7 @@ public class StudentDaoSqlImpl extends StaffDaoSqlImpl implements StudentDao{
         try {
             sqlExpression 
             = "INSERT INTO students (group_id, first_name, last_name, address_id) VALUES (?, ?, ?, ?);";
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             
             insertStudent = connection.prepareStatement(sqlExpression);
             
@@ -80,7 +101,9 @@ public class StudentDaoSqlImpl extends StaffDaoSqlImpl implements StudentDao{
         int zip = 0; 
         
         try {
-            connection = ConnectionFactory.getConnection();
+            /*ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
+            setDataSource((DataSource)context.getBean("dataSource"));*/
+            connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(sqlExpression);
             preparedStatement.setInt(1, studentID);
             resultSet = preparedStatement.executeQuery();
@@ -123,13 +146,12 @@ public class StudentDaoSqlImpl extends StaffDaoSqlImpl implements StudentDao{
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         int groupID = NOT_EXISTING;
-        StaffDao staffDao = new StaffDaoSqlImpl();
         int studentID = staffDao.getID(student);
         String sqlExpression 
                 = "SELECT group_id FROM students WHERE student_id = ?;";
                 
         try {
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(sqlExpression);
             preparedStatement.setInt(1, studentID);
             resultSet = preparedStatement.executeQuery();
@@ -151,17 +173,15 @@ public class StudentDaoSqlImpl extends StaffDaoSqlImpl implements StudentDao{
     
     @Override
     public void setGroupID(Student student, Group group) throws DAOException {
-        StaffDao staffDao = new StaffDaoSqlImpl();
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        GroupDao groupDao = new GroupDaoSqlImpl();
         int groupID = groupDao.getID(group);
         int studentID = staffDao.getID(student);
         String sqlExpression 
                 = "UPDATE students SET group_id = ? WHERE student_id = ?;";
                 
         try {
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(sqlExpression);
             preparedStatement.setInt(1, groupID);
             preparedStatement.setInt(2, studentID);

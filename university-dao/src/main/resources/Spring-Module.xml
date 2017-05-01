@@ -1,0 +1,63 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:annotation-config />
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.postgresql.Driver" />
+		<property name="url" value="jdbc:postgresql://localhost:5432/university" />
+		<property name="username" value="Alex" />
+		<property name="password" value="12345" />
+	</bean>
+
+	<bean id="studentDao" class="com.alexboriskin.university.dao.StudentDaoSqlImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="groupDao" ref="groupDao" />
+		<property name="addressDao" ref="addressDao" />
+		<property name="staffDao" ref="staffDao" />
+	</bean>
+	
+	<bean id="professorDao" class="com.alexboriskin.university.dao.ProfessorDaoSqlImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="addressDao" ref="addressDao" />
+	</bean>
+	
+	<bean id="staffDao" class="com.alexboriskin.university.dao.StaffDaoSqlImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="addressDao" ref="addressDao" />
+	</bean>
+
+	<bean id="groupDao" class="com.alexboriskin.university.dao.GroupDaoSqlImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="staffDao" ref="staffDao" />
+		<property name="professorDao" ref="professorDao" />
+		<property name="studentDao" ref="studentDao" />
+	</bean>
+	
+	<bean id="lectureDao" class="com.alexboriskin.university.dao.LectureDaoSqlImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="groupDao" ref="groupDao" />
+		<property name="staffDao" ref="staffDao" />
+		<property name="professorDao" ref="professorDao" />
+		<property name="studentDao" ref="studentDao" />
+	</bean>
+
+	<bean id="universityDao" class="com.alexboriskin.university.dao.UniversityDaoSqlImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="groupDao" ref="groupDao" />
+		<property name="professorDao" ref="professorDao" />
+	</bean>
+
+	<bean id="addressDao" class="com.alexboriskin.university.dao.AddressDaoSqlImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+
+</beans>

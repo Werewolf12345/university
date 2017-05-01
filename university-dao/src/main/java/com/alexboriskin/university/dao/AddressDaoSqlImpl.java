@@ -1,13 +1,22 @@
 package com.alexboriskin.university.dao;
 
 import java.sql.*;
+
+import javax.sql.DataSource;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import com.alexboriskin.university.domain.*;
 
 public class AddressDaoSqlImpl implements AddressDao {
     private static final int NOT_EXISTING = -1;
     private static final Logger log = LogManager.getLogger();
+    private DataSource dataSource;
+    
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     /**
      * @return address ID from DB or -1 if not found
@@ -23,7 +32,7 @@ public class AddressDaoSqlImpl implements AddressDao {
                 = "SELECT address_id FROM addresses WHERE zip = ? AND UPPER(address) = UPPER(?);";
         
         try {
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             selectStatement = connection.prepareStatement(sqlExpression);
             selectStatement.setInt(1, staffMember.getAddress().getZipCode());
             selectStatement.setString(2, staffMember.getAddress().getAddress());
@@ -58,7 +67,7 @@ public class AddressDaoSqlImpl implements AddressDao {
                 = "INSERT INTO addresses (state, address, zip) VALUES (?, ?, ?);";
         
         try {
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             connection.setAutoCommit(false);
             
             selectStatement = connection.prepareStatement(sqlExpression);

@@ -1,15 +1,33 @@
 package com.alexboriskin.university.dao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.alexboriskin.university.domain.*;
+import com.alexboriskin.university.domain.DAOException;
+import com.alexboriskin.university.domain.Professor;
+import com.alexboriskin.university.domain.Staff;
+import com.alexboriskin.university.domain.Student;
 
 public class StaffDaoSqlImpl implements StaffDao {
     private static final int NOT_EXISTING = -1;
     private static final Logger log = LogManager.getLogger();
+    private DataSource dataSource;
+    private AddressDao addressDao;
+       
+    public void setAddressDao(AddressDao addressDao) {
+        this.addressDao = addressDao;
+    }
+       
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
     
     /**
      * @return either Student's or Professor's ID from DB, -1 if not found
@@ -32,8 +50,7 @@ public class StaffDaoSqlImpl implements StaffDao {
         }
 
         try {
-            AddressDao addressDao = new AddressDaoSqlImpl();
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             prepareStatement = connection.prepareStatement(sqlExpression);
             prepareStatement.setString(1, staffMember.getFirstName());
             prepareStatement.setString(2, staffMember.getLastName());
@@ -60,7 +77,6 @@ public class StaffDaoSqlImpl implements StaffDao {
         Connection connection = null;
         PreparedStatement updateMember = null;
         String sqlExpression = null;
-        AddressDao addressDao = new AddressDaoSqlImpl();
         int addressID = addressDao.getID(staffMemberNewData);
         
         if(addressID == NOT_EXISTING) {
@@ -75,16 +91,15 @@ public class StaffDaoSqlImpl implements StaffDao {
         }
 
         try {
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             updateMember = connection.prepareStatement(sqlExpression);
-            StaffDao staffDao = new StaffDaoSqlImpl();
-
+ 
             connection.setAutoCommit(false);
 
             updateMember.setString(1, staffMemberNewData.getFirstName());
             updateMember.setString(2, staffMemberNewData.getLastName());
             updateMember.setInt(3, addressID);
-            updateMember.setInt(4, staffDao.getID(staffMemberOldData));
+            updateMember.setInt(4, getID(staffMemberOldData));
             updateMember.executeUpdate();
             connection.commit();
 
@@ -111,10 +126,9 @@ public class StaffDaoSqlImpl implements StaffDao {
         }
 
         try {
-            StaffDao staffDao = new StaffDaoSqlImpl();
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             deleteMember = connection.prepareStatement(sqlExpression);
-            deleteMember.setInt(1, staffDao.getID(staffMember));
+            deleteMember.setInt(1, getID(staffMember));
             deleteMember.execute();
         } catch (SQLException ex) {
             log.error("Cannot delete member: ", ex);
@@ -138,7 +152,7 @@ public class StaffDaoSqlImpl implements StaffDao {
                             + "(SELECT address_id FROM addresses WHERE zip = ?);";
         
         try {
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             deleteMember = connection.prepareStatement(sqlExpression);
             deleteMember.setString(1, firstName);
             deleteMember.setString(2, lastName);

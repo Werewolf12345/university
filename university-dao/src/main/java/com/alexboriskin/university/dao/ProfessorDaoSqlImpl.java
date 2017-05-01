@@ -1,22 +1,37 @@
 package com.alexboriskin.university.dao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.alexboriskin.university.domain.*;
+import com.alexboriskin.university.domain.Address;
+import com.alexboriskin.university.domain.DAOException;
+import com.alexboriskin.university.domain.Professor;
 
 public class ProfessorDaoSqlImpl extends StaffDaoSqlImpl implements ProfessorDao {
     private static final int NOT_EXISTING = -1;
     private static final Logger log = LogManager.getLogger();
+    private DataSource dataSource;
+    private AddressDao addressDao;
     
+    public void setAddressDao(AddressDao addressDao) {
+        this.addressDao = addressDao;
+    }
+    
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public void save(Professor professor) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        AddressDao addressDao = new AddressDaoSqlImpl();
         int addressID = addressDao.getID(professor);
         String sqlExpression = null;
         
@@ -29,7 +44,7 @@ public class ProfessorDaoSqlImpl extends StaffDaoSqlImpl implements ProfessorDao
         try {
             sqlExpression 
             = "INSERT INTO professors (first_name, last_name, address_id) VALUES (?, ?, ?);";
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             
             preparedStatement = connection
                     .prepareStatement(sqlExpression);
@@ -73,7 +88,7 @@ public class ProfessorDaoSqlImpl extends StaffDaoSqlImpl implements ProfessorDao
         int zip = 0; 
         
         try {
-            connection = ConnectionFactory.getConnection();
+            connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(sqlExpression);
             preparedStatement.setInt(1, professorID);
             resultSet = preparedStatement.executeQuery();

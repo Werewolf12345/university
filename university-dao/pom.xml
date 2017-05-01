@@ -13,6 +13,13 @@
 	<artifactId>university-dao</artifactId>
 
 	<dependencies>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>4.3.8.RELEASE</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.postgresql</groupId>

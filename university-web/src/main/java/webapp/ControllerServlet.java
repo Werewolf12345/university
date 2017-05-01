@@ -24,9 +24,9 @@ public class ControllerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         String forwardToURL = "";
-        String action = (String) request.getAttribute("action");
+        String action = request.getParameter("action");
         if (action == null) {
-            action = "grouplist";
+            action = "groupslist";
         }
 
         if (action.equalsIgnoreCase("groupslist")) {
