@@ -1,13 +1,22 @@
 package com.alexboriskin.university.dao;
 
-import com.alexboriskin.university.domain.DAOException;
+import org.springframework.orm.hibernate5.HibernateTemplate;
+
 import com.alexboriskin.university.domain.Group;
 
 public interface GroupDao {
-   
-    public int getID(Group group) throws DAOException;
 
-    public void save(Group group) throws DAOException;
+    void setTemplate(HibernateTemplate template);
 
-    public Group get(int groupID) throws DAOException;
+    HibernateTemplate getTemplate();
+
+    public void save(Group group);
+
+    public Group get(int groupID);
+    
+    public Group getByName(String name);
+
+    public void update(Group group);
+
+    public void delete(int id);
 }

@@ -1,25 +1,49 @@
 package com.alexboriskin.university.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alexboriskin.university.domain.Address;
 import com.alexboriskin.university.domain.Address.US;
-import com.alexboriskin.university.domain.DAOException;
-import com.alexboriskin.university.domain.Student;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath*:Spring-Module.xml")
+@Transactional
 public class AddressDAOTest {
 
+    @Autowired
+    AddressDao addressDao;
+
     @Test
-    public void testGetID() throws DAOException {
-        Student studentInDB = new Student("Alex", "Bor", new Address(US.ILLINOIS, "920 Cherry Valley RD", 60061));
-        Student studentNotInDB = new Student("Azer", "Bajanov", new Address(US.ILLINOIS, "Ghj Arj", 60061));
+    public void testSaveGetDelete() {
+        Address address = new Address(US.ALABAMA, "921 Valley RD", 50055);
+        addressDao.save(address);
+        int addressId = address.getId();
         
-        AddressDao addressDao = new AddressDaoSqlImpl();
+        Address addressExpected = new Address(US.ALABAMA, "921 Valley RD", 50055);
+        address = addressDao.get(addressId);
+        assertEquals(addressExpected, address);
         
-        assertEquals(1, addressDao.getID(studentInDB));
-        assertEquals(-1, addressDao.getID(studentNotInDB));
+        address.setZipCode(60061);
+        address.setAddress("920 Cherry");
+        address.setState(US.ILLINOIS);
+        addressDao.update(address);
+        
+        addressExpected = new Address(US.ILLINOIS, "920 Cherry", 60061);
+        address = addressDao.get(addressId);
+        assertEquals(addressExpected, address);
+        
+        addressDao.delete(addressId);
+        address = addressDao.get(addressId);
+        assertNull(address);
+
     }
         
 }

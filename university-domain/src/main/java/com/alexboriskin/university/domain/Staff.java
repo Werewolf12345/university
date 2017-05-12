@@ -1,18 +1,33 @@
 package com.alexboriskin.university.domain;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class Staff {
+@SuppressWarnings("serial")
+public abstract class Staff implements Serializable {
     protected String firstName;
     protected String lastName;
     protected Address address;
+    protected int id;
     
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public Staff(String firstName, String lastName, Address address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
     }
   
+    public Staff() {
+        
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -40,7 +55,8 @@ public abstract class Staff {
       
     @Override
     public int hashCode() {
-        return Objects.hash(firstName.toLowerCase(), lastName.toLowerCase(), address.zipCode);
+        return Objects.hash(firstName.toLowerCase(), lastName.toLowerCase(), address.zipCode, 
+                address.getAddress().toLowerCase(), address.getState());
     }
     
     @Override
@@ -53,6 +69,6 @@ public abstract class Staff {
         }
         return (((Staff) obj).getFirstName().equalsIgnoreCase(this.getFirstName())
                 && ((Staff) obj).getLastName().equalsIgnoreCase(this.getLastName()) 
-                && ((Staff) obj).getAddress().zipCode == this.getAddress().zipCode);
+                && ((Staff) obj).getAddress().equals(this.getAddress()));
     }
 }

@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+@SuppressWarnings("serial")
 @WebServlet(urlPatterns = "/controller.html")
 public class ControllerServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
     private static final Logger log = LogManager.getLogger();
     private static final String LIST_PROFESSORS = "/listprofessors.html";
     private static final String LIST_GROUPS = "/grouplist.html";

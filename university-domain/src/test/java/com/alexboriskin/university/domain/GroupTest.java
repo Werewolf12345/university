@@ -13,12 +13,17 @@ public class GroupTest {
 
     @Test
     public void testAdd() {
-        Group group = new Group("GRP1");
+        
+        Professor professor1 = new Professor("Aaa", "Bbb", new Address(
+                US.ARIZONA, "Address1", 12345));
+        
+        Group group = new Group("GRP1", professor1);
         Student student1 = new Student("Joe", "Doe", new Address(US.ILLINOIS, "212 Elm st, Mettawa", 60061));
-        Student student2 = new Student("JOE", "doe", new Address(US.ILLINOIS, "212 elm STREET mettawa", 60061));
+        Student student2 = new Student("JOE", "doe", new Address(US.ILLINOIS, "212 elm ST, mettawa", 60061));
         Student student3 = new Student("Adam", "Smith", new Address(US.ILLINOIS, "214 elm STREET mettawa", 60061));
         
         assertTrue(group.add(student1));
+        assertFalse(group.add(student2));
         assertFalse(group.add(student2));
         assertFalse(group.add(student1));
         assertTrue(group.add(student3));
@@ -26,7 +31,10 @@ public class GroupTest {
 
     @Test
     public void testFind() {
-        Group group = new Group("GRP1");
+        Professor professor1 = new Professor("Aaa", "Bbb", new Address(
+                US.ARIZONA, "Address1", 12345));
+        
+        Group group = new Group("GRP1", professor1);
         Student student = new Student("Joe", "Doe", new Address(US.ILLINOIS, "212 Elm st, Mettawa", 60061));
         group.add(student);
 
@@ -42,7 +50,11 @@ public class GroupTest {
 
     @Test
     public void testRemove() {
-        Group group = new Group("GRP1");
+        
+        Professor professor1 = new Professor("Aaa", "Bbb", new Address(
+                US.ARIZONA, "Address1", 12345));
+        
+        Group group = new Group("GRP1", professor1);
         Student student1 = new Student("Joe", "Doe", new Address(US.ILLINOIS, "212 Elm st, Mettawa", 60061));
         Student student3 = new Student("Adam", "Smith", new Address(US.ILLINOIS, "214 elm STREET mettawa", 60061));
         group.add(student1);

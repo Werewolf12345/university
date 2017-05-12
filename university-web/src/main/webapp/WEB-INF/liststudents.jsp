@@ -37,9 +37,7 @@
 						&zip=<c:out value="${current.address.zipCode}"/>
 						&group=<c:out value="${group}"/>">Update</a></td>
 					<td><a
-						href="studentslist.html?action=delete&firstname=<c:out value="${current.firstName}"/>
-						&lastname=<c:out value="${current.lastName}"/>
-						&zip=<c:out value="${current.address.zipCode}"/>
+						href="studentslist.html?action=delete&id=<c:out value="${current.id}"/>
 						&group=<c:out value="${group}"/>">Delete</a></td>
 					<td><a
 						href="index.html?action=schedule&firstname=<c:out value="${current.firstName}"/>

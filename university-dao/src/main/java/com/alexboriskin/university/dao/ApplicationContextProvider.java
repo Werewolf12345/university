@@ -3,13 +3,10 @@ package com.alexboriskin.university.dao;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-/**/
-
 public class ApplicationContextProvider {
     private static ApplicationContext applicationContext;
 
     private ApplicationContextProvider() {
-        
     }
 
     public static ApplicationContext getInstance() {
@@ -18,5 +15,4 @@ public class ApplicationContextProvider {
         }
         return applicationContext;
     }
-
 }

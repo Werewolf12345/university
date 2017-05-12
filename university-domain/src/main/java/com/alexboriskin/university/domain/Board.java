@@ -1,12 +1,11 @@
 package com.alexboriskin.university.domain;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class Board<T> {
-    public Set<T> getMembers() {
-        return members;
-    }
+@SuppressWarnings("serial")
+public abstract class Board<T> implements Serializable {
 
     protected Set<T> members;
 
@@ -14,21 +13,28 @@ public abstract class Board<T> {
         this.members = new HashSet<T>();
     }
 
+    public Set<T> getMembers() {
+        return members;
+    }
+
     public boolean add(T newMember) {
         return members.add(newMember);
     }
 
     public T find(String firstName, String lastName, int zipCode) {
-        if(!contains(firstName, lastName, zipCode)) {
-            throw new IllegalArgumentException(firstName + " " + lastName + " not found");
+        if (!contains(firstName, lastName, zipCode)) {
+            throw new IllegalArgumentException(firstName + " " + lastName
+                    + " not found");
         }
-        
+
         T result = null;
-        
+
         if (!members.isEmpty()) {
             for (T current : members) {
-                if (((Staff) current).getFirstName().equalsIgnoreCase(firstName)
-                        && ((Staff) current).getLastName().equalsIgnoreCase(lastName)
+                if (((Staff) current).getFirstName()
+                        .equalsIgnoreCase(firstName)
+                        && ((Staff) current).getLastName().equalsIgnoreCase(
+                                lastName)
                         && ((Staff) current).getAddress().zipCode == zipCode) {
                     result = current;
                 }
@@ -36,12 +42,14 @@ public abstract class Board<T> {
         }
         return result;
     }
-    
+
     public boolean contains(String firstName, String lastName, int zipCode) {
         if (!members.isEmpty()) {
             for (T current : members) {
-                if (((Staff) current).getFirstName().equalsIgnoreCase(firstName)
-                        && ((Staff) current).getLastName().equalsIgnoreCase(lastName)
+                if (((Staff) current).getFirstName()
+                        .equalsIgnoreCase(firstName)
+                        && ((Staff) current).getLastName().equalsIgnoreCase(
+                                lastName)
                         && ((Staff) current).getAddress().zipCode == zipCode) {
                     return true;
                 }
@@ -53,8 +61,10 @@ public abstract class Board<T> {
     public boolean remove(String firstName, String lastName, int zipCode) {
         if (!members.isEmpty()) {
             for (T current : members) {
-                if (((Staff) current).getFirstName().equalsIgnoreCase(firstName)
-                        && ((Staff) current).getLastName().equalsIgnoreCase(lastName)
+                if (((Staff) current).getFirstName()
+                        .equalsIgnoreCase(firstName)
+                        && ((Staff) current).getLastName().equalsIgnoreCase(
+                                lastName)
                         && ((Staff) current).getAddress().zipCode == zipCode) {
                     return members.remove(current);
                 }

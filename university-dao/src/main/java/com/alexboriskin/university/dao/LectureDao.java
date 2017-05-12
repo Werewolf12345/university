@@ -1,21 +1,20 @@
 package com.alexboriskin.university.dao;
 
-import java.util.Calendar;
-import java.util.Set;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 
-import com.alexboriskin.university.domain.*;
+import com.alexboriskin.university.domain.Lecture;
 
 public interface LectureDao {
-    public void save(Lecture lecture) throws DAOException;
 
-    public Lecture get(int lectureID) throws DAOException;
+    HibernateTemplate getTemplate();
 
-    public void delete(int lectureID) throws DAOException;
+    void setTemplate(HibernateTemplate template);
 
-    public int getID(Lecture lecture) throws DAOException;
+    public void save(Lecture lecture);
 
-    public void update(int lectureID, Lecture lecture) throws DAOException;
+    public Lecture get(int lectureID);
 
-    public Set<Lecture> getLectures(Staff individual, Calendar start,
-            Calendar end) throws DAOException;
+    public void delete(int lectureID);
+
+    public void update(int lectureID, Lecture lecture);
 }

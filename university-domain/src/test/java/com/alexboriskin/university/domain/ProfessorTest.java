@@ -12,7 +12,7 @@ public class ProfessorTest {
     @Test
     public void testEqualsObject() {
         Professor professor1 = new Professor("Joe", "Doe", new Address(US.ILLINOIS, "212 Elm st, Mettawa", 60061));
-        Professor professor2 = new Professor("JOE", "doe", new Address(US.ILLINOIS, "212 elm STREET mettawa", 60061));
+        Professor professor2 = new Professor("JOE", "doe", new Address(US.ILLINOIS, "212 elm ST, mettawa", 60061));
         Professor professor3 = new Professor("Adam", "Smith", new Address(US.ILLINOIS, "214 elm STREET mettawa", 60061));
         
         assertTrue(professor1.equals(professor1));

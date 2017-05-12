@@ -1,11 +1,20 @@
 package com.alexboriskin.university.dao;
 
-import com.alexboriskin.university.domain.*;
+import org.springframework.orm.hibernate5.HibernateTemplate;
+
+import com.alexboriskin.university.domain.Professor;
 
 public interface ProfessorDao {
-    public void save(Professor professor) throws DAOException;
-    
-    public void delete(Professor professor) throws DAOException;
 
-    public Professor get(int professorID) throws DAOException;
+    void setTemplate(HibernateTemplate template);
+
+    HibernateTemplate getTemplate();
+    
+    public void save(Professor professor);
+    
+    public Professor get(int professorID);
+
+    void update(Professor professor);
+
+    void delete(int id);
 }

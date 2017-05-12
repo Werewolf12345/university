@@ -1,17 +1,20 @@
 package com.alexboriskin.university.dao;
 
-import javax.sql.DataSource;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 
-import com.alexboriskin.university.domain.*;
+import com.alexboriskin.university.domain.Student;
 
 public interface StudentDao {
-    public void setDataSource(DataSource dataSource);
-    
-    public void save(Student student, Group group) throws DAOException;
 
-    public Student get(int studentID) throws DAOException;
+    void setTemplate(HibernateTemplate template);
 
-    public int getGroupID(Student student) throws DAOException;
+    HibernateTemplate getTemplate();
 
-    public void setGroupID(Student student, Group group) throws DAOException;
+    public void save(Student student);
+
+    public Student get(int studentID);
+
+    void update(Student student);
+
+    public void delete(int i);
 }

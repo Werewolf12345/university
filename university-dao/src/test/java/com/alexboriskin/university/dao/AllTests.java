@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ AddressDAOTest.class, GroupDAOTest.class, LectureDAOTest.class,
-        StaffDAOTest.class, StudentDAOTest.class, UniversityTest.class })
+        ProfessorDAOTest.class, StudentDAOTest.class, UniversityTest.class })
 public class AllTests {
 
 }

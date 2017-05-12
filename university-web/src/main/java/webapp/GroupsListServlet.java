@@ -18,44 +18,41 @@ import org.springframework.context.ApplicationContext;
 
 import com.alexboriskin.university.dao.ApplicationContextProvider;
 import com.alexboriskin.university.dao.UniversityDao;
-import com.alexboriskin.university.domain.DAOException;
 import com.alexboriskin.university.domain.Group;
 
+@SuppressWarnings("serial")
 @WebServlet(urlPatterns = "/grouplist.html")
 public class GroupsListServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+    
     private static final Logger log = LogManager.getLogger();
-     
+            
     @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
-        try {
-            ApplicationContext context = ApplicationContextProvider.getInstance();
-            UniversityDao universityDao  = (UniversityDao) context.getBean("universityDao");
-            
-            Set<Group> groups = universityDao.getGroupsSet();
-            Map<String, Integer> groupsMap = new HashMap<>();
+        ApplicationContext context = ApplicationContextProvider.getInstance();
+        UniversityDao universityDao = (UniversityDao) context
+                .getBean("universityDao");
 
-            for (Group current : groups) {
-                int groupSize = current.getStudents().size();
-                if (groupSize > 0) {
-                    groupsMap.put(current.getName(), groupSize);
-                }
+        Set<Group> groups = universityDao.getGroupsSet();
+        Map<String, Integer> groupsMap = new HashMap<>();
+
+        for (Group current : groups) {
+            current.getStudents();
+            int groupSize = current.getStudents().size();
+            if (groupSize > 0) {
+                groupsMap.put(current.getName(), groupSize);
             }
 
             request.setAttribute("groups", groupsMap);
-        } catch (DAOException e) {
-            log.error("SQL database error: " + e);
-        }
 
-        RequestDispatcher view = request
-                .getRequestDispatcher("/WEB-INF/listgroups.jsp");
-        try {
-            view.forward(request, response);
-        } catch (ServletException e) {
-            log.error("listgroups.jsp forward error: " + e);
+            RequestDispatcher view = request
+                    .getRequestDispatcher("/WEB-INF/listgroups.jsp");
+            try {
+                view.forward(request, response);
+            } catch (ServletException e) {
+                log.error("listgroups.jsp forward error: " + e);
+            }
         }
-
     }
 }

@@ -1,10 +1,21 @@
 package com.alexboriskin.university.dao;
 
-import com.alexboriskin.university.domain.DAOException;
-import com.alexboriskin.university.domain.Staff;
+import org.springframework.orm.hibernate5.HibernateTemplate;
+
+import com.alexboriskin.university.domain.Address;
 
 public interface AddressDao {
-    public int getID(Staff staffMember) throws DAOException;
 
-    public void save(Staff staffMember) throws DAOException;
+    void setTemplate(HibernateTemplate template);
+
+    HibernateTemplate getTemplate();
+
+    void save(Address address);
+
+    Address get(int addressID);
+
+    void update(Address address);
+
+    void delete(int id);
+
 }
