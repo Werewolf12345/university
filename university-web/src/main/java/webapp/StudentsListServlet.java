@@ -12,14 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Controller;
 
 import com.alexboriskin.university.dao.ApplicationContextProvider;
 import com.alexboriskin.university.dao.GroupDao;
-import com.alexboriskin.university.dao.StudentDao;
 import com.alexboriskin.university.dao.StudentService;
 import com.alexboriskin.university.domain.Group;
 
+@Controller
 @SuppressWarnings("serial")
 @WebServlet(urlPatterns = "/studentslist.html")
 public class StudentsListServlet extends HttpServlet {
@@ -35,8 +35,6 @@ public class StudentsListServlet extends HttpServlet {
             action = "list";
         }
         
-        System.out.println("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ:  " + action);
-
         if (action.equalsIgnoreCase("list")) {
 
             ApplicationContext context = ApplicationContextProvider

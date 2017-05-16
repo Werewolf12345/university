@@ -106,6 +106,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf</artifactId>
+			<version>3.0.6.RELEASE</version>
+		</dependency>
+
 	</dependencies>
 
 </project>
