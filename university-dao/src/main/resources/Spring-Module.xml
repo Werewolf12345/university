@@ -29,7 +29,13 @@
 				<prop key="hibernate.format_sql">true</prop>
 			</props>
 		</property>
-		<property name="packagesToScan" value="com.alexboriskin.university.domain" />
+		
+		<property name="packagesToScan">
+         <list>
+              <value>com.alexboriskin.university.domain</value>
+              <value>webapp.resources</value>
+         </list>
+     </property> 
 	</bean>
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">

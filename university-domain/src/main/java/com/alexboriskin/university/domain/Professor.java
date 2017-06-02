@@ -11,7 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
+@XmlRootElement
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "professors")
@@ -65,6 +68,7 @@ public class Professor extends Staff implements Serializable {
         super.setAddress(address);
     }
     
+    @XmlTransient
     @ManyToOne(cascade = {CascadeType.ALL, CascadeType.DETACH })
     @JoinColumn(name = "address_id", nullable = false)
     @Override

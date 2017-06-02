@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,10 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
+@XmlRootElement
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "students")
@@ -65,7 +66,8 @@ public class Student extends Staff implements Serializable {
         return lastName;
     }
     
-    @ManyToOne(targetEntity = Group.class, fetch = FetchType.LAZY)
+    
+    @ManyToOne(targetEntity = Group.class)
     @Cascade(CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "group_fk", nullable = false, insertable=false, updatable=false)
     public Group getGroup() {
@@ -73,9 +75,6 @@ public class Student extends Staff implements Serializable {
     }
 
     public void setGroup(Group group) {
-        /*if(this.group != null) {
-            this.group.remove(this);
-        }*/
         this.group = group;
     }
 
@@ -88,6 +87,7 @@ public class Student extends Staff implements Serializable {
     public void setAddress(Address address) {
         super.setAddress(address);
     }
+    
     
     @ManyToOne
     @JoinColumn(name = "address_id", nullable = false)

@@ -15,12 +15,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 @SuppressWarnings("serial")
 
+@XmlRootElement
 @Entity
 @Table(name = "groups", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
 public class Group extends Board<Student> implements Serializable {
@@ -70,7 +73,8 @@ public class Group extends Board<Student> implements Serializable {
         student.setGroup(this);
         return super.add(student);
     }
-
+    
+    @XmlTransient
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_fk", nullable = false)
     public Set<Student> getStudents() {

@@ -7,13 +7,14 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.alexboriskin.university.domain.Group;
 import com.alexboriskin.university.domain.Student;
 
 @Repository
 public class StudentDaoHibernateImpl implements StudentDao {
 
     private static final Logger log = LogManager.getLogger();
-    
+
     @Autowired
     private HibernateTemplate template;
 
@@ -40,7 +41,7 @@ public class StudentDaoHibernateImpl implements StudentDao {
     @Override
     public void update(Student student) {
         try {
-            template.saveOrUpdate(student);
+            template.merge(student);
         } catch (DataAccessException e) {
             log.error("Cannot update student: " + e);
             throw e;
@@ -51,6 +52,17 @@ public class StudentDaoHibernateImpl implements StudentDao {
     public Student get(int studentID) {
         try {
             return template.get(Student.class, studentID);
+        } catch (DataAccessException e) {
+            log.error("Cannot get student: " + e);
+            throw e;
+        }
+    }
+
+    @Override
+    public Group getGroup(int studentID) {
+        try {
+            Student student = template.get(Student.class, studentID);
+            return student.getGroup();
         } catch (DataAccessException e) {
             log.error("Cannot get student: " + e);
             throw e;
